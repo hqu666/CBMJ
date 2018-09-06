@@ -12,4 +12,6 @@
 		section:
 		%1$d
 	</string>
+	<string name="mm5nbreathe5vomit">5秒吸って5秒吐く</string>
+	<string name="mm3nbreathe1stop6vomit">3秒吸って1秒止めて、6秒吐く</string>
 </resources>

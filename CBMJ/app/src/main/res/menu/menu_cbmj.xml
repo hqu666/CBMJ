@@ -3,8 +3,16 @@
 	  xmlns:tools="http://schemas.android.com/tools"
 	  tools:context="com.coresoft.cbmj.CBMJActivity">
 	<item
-		android:id="@+id/action_settings"
+		android:id="@+id/actio_5nbreathe5vomit"
 		android:orderInCategory="100"
-		android:title="@string/action_settings"
+		android:title="@string/mm5nbreathe5vomit"
 		app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/actio_3nbreathe1stop6vomit"
+		android:orderInCategory="100"
+		android:title="@string/mm3nbreathe1stop6vomit"
+		app:showAsAction="never"/>
+
+
 </menu>
