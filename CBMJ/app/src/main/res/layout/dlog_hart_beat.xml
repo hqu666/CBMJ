@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/spectrum_root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="5dp">
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/textView22"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="測定日 "
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView27"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="2018/09/07 16:28:05 "
+				android:textSize="18sp"/>
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/textView28"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="測定時間"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView29"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="00:01:26"
+				android:textSize="18sp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/textView30"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="呼吸種別"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView31"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="5:5"
+				android:textSize="18sp"/>
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/textView32"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="呼吸タイミング"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView33"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="50%0%50%0%"
+				android:textSize="18sp"/>
+		</TableRow>
+
+		<TableRow
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/textView34"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="コヒーレンス達成度合い "
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView35"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="41"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/textView36"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp"
+				android:layout_weight="1"
+				android:gravity="right"
+				android:text="点"
+				android:textSize="18sp"/>
+		</TableRow>
+
+	</TableLayout>
+
+
+</LinearLayout>
