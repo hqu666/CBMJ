@@ -80,13 +80,13 @@
 					<FrameLayout
 						android:id="@+id/ma_preview_fl"
 						android:layout_width="38dp"
-						android:layout_height="21dp"
+						android:layout_height="22dp"
 						android:layout_alignParentBottom="false"
 						android:layout_alignParentEnd="false"
 						android:layout_alignParentTop="false"
 						android:orientation="horizontal"
 						android:textAlignment="center">
-					<!--<SurfaceView-->
+						<!--<SurfaceView-->
 						<!--android:id="@+id/cam_sv"-->
 						<!--android:layout_width="wrap_content"-->
 						<!--android:layout_height="20dp"-->
