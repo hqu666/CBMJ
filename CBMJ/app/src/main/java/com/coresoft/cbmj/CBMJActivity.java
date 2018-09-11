@@ -6,7 +6,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,13 +20,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,7 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CBMJActivity extends AppCompatActivity {
-	public boolean isNotSet = true;
+
+	private HandlerThread mBackgroundThread;
+	private Handler mBackgroundHandler;        // A {@link Handler} for running tasks in the background.
+
+				public boolean isNotSet = true;
 	static final int REQUEST_PREF = 100;                          //Prefarensからの戻り
 	public TextView bin_type_tv;
 
@@ -41,6 +52,10 @@ public class CBMJActivity extends AppCompatActivity {
 	public LinearLayout coherencei_ll;    		// コヒーレンス達成度合い
 	public LinearLayout breathing_ll;    		//呼吸目安
 	public AlertDialog myDlog;
+	public FrameLayout ma_preview_fl;
+	public SurfaceView ma_sarface_view;
+//	public SurfaceView cam_sv;    		//カメラモニター
+
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -153,6 +168,8 @@ public class CBMJActivity extends AppCompatActivity {
 			hart_beat_ll = ( LinearLayout ) findViewById(R.id.hart_beat_ll);      		//心拍数履歴
 			coherencei_ll = ( LinearLayout ) findViewById(R.id.coherencei_ll);    		// コヒーレンス達成度合い
 			breathing_ll = ( LinearLayout ) findViewById(R.id.breathing_ll);    		//呼吸目安
+//			cam_sv = ( SurfaceView ) findViewById(R.id.cam_sv);    		//カメラモニター
+			ma_preview_fl = ( FrameLayout ) findViewById(R.id.ma_preview_fl);        //pereviewVの呼び込み枠       ViewGroup
 
 			// Set up the ViewPager with the sections adapter.
 			mViewPager = ( ViewPager ) findViewById(R.id.container);
@@ -224,7 +241,12 @@ public class CBMJActivity extends AppCompatActivity {
 		final String TAG = "onResume[CBMIA}";
 		String dbMsg = "";
 		try {
-			myLog(TAG , dbMsg);
+			dbMsg += ",mBackgroundThread=" + mBackgroundThread;
+			if ( mBackgroundThread == null ) {
+				//org
+			} else {
+				dbMsg += ",mBackgroundThread=" + mBackgroundThread.isAlive();
+			}			myLog(TAG , dbMsg);
 		} catch (Exception er) {
 			myErrorLog(TAG , dbMsg + ";でエラー発生；" + er);
 		}
@@ -344,13 +366,42 @@ public class CBMJActivity extends AppCompatActivity {
 				}
 			});
 
-
 			breathing_ll.setOnClickListener(new View.OnClickListener() {       		//呼吸目安
 				@Override
 				public void onClick(View v) {
 					showBbeathing();
 				}
 			});
+
+//カメラモニター
+			FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT , ViewGroup.LayoutParams.MATCH_PARENT);
+//			layoutParams.weight = 1.0f;
+			layoutParams.gravity = Gravity.CENTER;           //17;効いてない？
+			ma_sarface_view = new SurfaceView(this);       //  プレビュー用サーフェス
+			ma_sarface_view.setLayoutParams(layoutParams);
+			Display display = getWindowManager().getDefaultDisplay();                // 画面サイズ;HardwareSize;を取得する
+			Point p = new Point();
+			display.getSize(p);
+			int hsWidth = p.x;
+			int hsHeight = p.y;
+			dbMsg += ",this[" + hsWidth + "×" + hsHeight + "]";
+			ViewGroup.LayoutParams svlp = ma_sarface_view.getLayoutParams();
+//				dbMsg += ",LayoutParams[" + svlp.width + "×" + svlp.height + "]";
+			svlp.width = hsWidth;    //ma_sarface_view.getWidth();
+			svlp.height = hsHeight;        // ma_sarface_view.getWidth() * PREVIEW_HEIGHT / PREVIEW_WIDTH;
+			if ( hsHeight < hsWidth ) {
+				hsWidth = hsHeight * 4 / 3;
+				svlp.width = hsWidth;
+			} else {
+				hsHeight = hsWidth * 4 / 3;
+				svlp.height = hsHeight;
+			}
+			dbMsg += ">>[" + hsWidth + "×" + hsHeight + "]";
+			dbMsg += ">LayoutParams>[" + svlp.width + "×" + svlp.height + "]";
+			ma_sarface_view.setLayoutParams(svlp);                //ここではviewにサイズを与えるだけ。   Holderはカメラセッション開始以降で設定
+			svlp = ma_sarface_view.getLayoutParams();
+			ma_preview_fl.addView(ma_sarface_view);
+			ma_sarface_view.setId(( int ) (9999));            //生成時のみ付与する必要有り
 
 			myLog(TAG , dbMsg);
 		} catch (Exception er) {
@@ -650,6 +701,34 @@ public class CBMJActivity extends AppCompatActivity {
 	}
 
 
+
+
+
+	/**
+	 * Starts a background thread and its {@link Handler}.
+	 * onResumeでスタート
+	 */
+	private void startBackgroundThread() {
+		final String TAG = "startBackgroundThread[MA]";
+		String dbMsg = "";
+		try {
+			dbMsg = "mBackgroundThread=" + mBackgroundThread;
+			if ( mBackgroundThread == null ) {
+				mBackgroundThread = new HandlerThread("CameraBackground");
+				mBackgroundThread.start();
+				dbMsg += ">>=" + mBackgroundThread;
+			}
+			dbMsg += " , mBackgroundHandler=" + mBackgroundHandler;
+			if ( mBackgroundHandler == null ) {
+				mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+				dbMsg += ">>=" + mBackgroundHandler;
+			}
+			myLog(TAG , dbMsg);
+		} catch (Exception er) {
+			myErrorLog(TAG , dbMsg + ";でエラー発生；" + er);
+		}
+
+	}
 	///////////////////////////////////////////////////////////////////////////////////
 	public void pendeingMessege() {
 		String titolStr = "制作中です";
